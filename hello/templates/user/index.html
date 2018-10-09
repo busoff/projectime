@@ -1,0 +1,9 @@
+{% if user_list %}
+    <ul>
+        {% for u in user_list %}
+            <li><a href="/user/{{u.name}}">{{u.name}}</a> </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> no user added </p>
+{% endif %}

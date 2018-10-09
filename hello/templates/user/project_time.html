@@ -1,0 +1,11 @@
+{% if project_time_list %}
+    {% for pt in project_time_list %}
+        <ur>
+            <li>
+                {{pt.user}} @ {{pt.project}} on {{pt.date}}
+            </li>
+        </ur>
+    {% endfor %}
+{% else %}
+<p> no project time available</p>
+{% endif %}
