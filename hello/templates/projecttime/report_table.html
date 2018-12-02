@@ -142,7 +142,7 @@
             var currentWeek = getISOWeek(now);
             populateWeekNumberSelect(currentWeek);
 
-            // attach #week_number "change" event
+            // attach #week_number "change" event handler which request entries from server
             $("#week_number").change(function () {
                 var week = $(this).val()
                 var from = getDateOfISOWeek(week, now.getFullYear())
