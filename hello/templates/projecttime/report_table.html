@@ -127,11 +127,7 @@
         }
 
         function createReportTableEmptyRow() {
-            // add one blank line for new input
-            var projectSelect = $("<select/>").append(
-                $("<option/>").val("PCTRL4").text("PCTRL4"),
-                $("<option/>").val("wireless gateway").text("wireless gateway"));
-            
+            // add one blank line for new input            
             var row = $("<tr/>").append(
                 createProjectSelect(),
                 $("<td/>").append($("<input/>")),
