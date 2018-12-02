@@ -6,13 +6,9 @@ import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
-# Create your views here.
+import logging
 
-
-def index(request):
-    return render(request, 'projecttime/add.html', 
-        {'users': User.objects.all(),
-         'projects': Project.objects.all()})
+logger = logging.getLogger(__name__)
 
 
 def user_list(request):
@@ -35,17 +31,6 @@ def user_name(request, name):
         "project_time_list": ProjectTimeEntry.objects.filter(user__name=name)
     }
     return HttpResponse(template.render(context, request))
-
-def add_entry(request):
-    project = Project.objects.get(name=request.POST['project'])
-    user = User.objects.get(name=request.POST['user'])
-    entry = ProjectTimeEntry()
-    entry.hour = int(request.POST['hour'])
-    entry.date =  datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
-    entry.project = project
-    entry.user = user
-    entry.save()
-    return HttpResponse("entry1 added {}".format(request.POST))
 
 def get_entries(request):
     entries = []
@@ -79,20 +64,19 @@ def submit_entries(request):
         e.project = Project.objects.get(name=entry['project'])
         e.user = User.objects.get(user_id=entry['user'])
         e.date =  datetime.datetime.strptime(entry['date'], "%Y-%m-%d").date()
-        if entry['hour'].strip() == '':
-            e.hour = 0
-        else:
-            e.hour = int(entry['hour'])
-        e.save()
+
+        hour = 0
+        try:
+            hour = int(entry['hour'])
+        except ValueError:
+            logger.error('invalid hour format')
+
+        if hour > 0:
+            e.hour = hour
+            e.save()
 
     return HttpResponse("OK")
 
-def example(request):
-    return render(request, 'projecttime/test.html', {})
-
-
-@csrf_exempt
-def report(request):
-    return HttpResponse("OK")
-
-
+def projecttime(request, user_id):
+    user = User.objects.get(user_id=user_id)
+    return render(request, 'projecttime/report_table.html', {'user_name':user.name, 'user_id':user.user_id})
