@@ -68,3 +68,7 @@ def submit_entries(request):
 def projecttime(request, user_id):
     user = User.objects.get(user_id=user_id)
     return render(request, 'projecttime/report_table.html', {'user_name':user.name, 'user_id':user.user_id})
+
+
+def test(request):
+    return render(request, 'projecttime/report_table_bs.html', {})

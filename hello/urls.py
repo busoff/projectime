@@ -8,4 +8,5 @@ urlpatterns = [
     path('report/projects', views.get_projects, name="report"),
     path('report/<int:user_id>', views.projecttime, name="report"),
     path('', views.user_list, name="user_list"),
+    path('test', views.test, name="test"),
 ]
