@@ -121,7 +121,6 @@
 
         function initMoreEntry() {
             $("#more_entry").click(function (event) {
-                event.preventDefault();
                 $("#report_table tbody").append(createReportTableEmptyRow());
             });
         }
@@ -200,8 +199,7 @@
         </thead>
         <tbody></tbody>
     </table>
-    <a id="more_entry" href="">More entry</a>
-
+    <button id="more_entry" href="">More entry</button>
     <button id="submit">submit</button>
 </body>
 
