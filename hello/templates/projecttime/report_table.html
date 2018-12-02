@@ -152,6 +152,13 @@
             $("#week_number").val(currentWeek).change();
         }
 
+        function initMoreEntry() {
+            $("#more_entry").click(function (event) {
+                event.preventDefault();
+                $("#report_table tbody").append(createReportTableEmptyRow());
+            });
+        }
+
         function createReportTableEmptyRow() {
             // add one blank line for new input
             var projectSelect = $("<select/>").append(
@@ -173,10 +180,8 @@
         function initSubmitButton() {
             $("#submit").click(function () {
                 var entries = splitReportToEntries();
-                postEntries(entries, function(date, status)
-                {
-                    if (status == "success")
-                    {
+                postEntries(entries, function (date, status) {
+                    if (status == "success") {
                         // simulate user selects week number to refresh report table from server
                         $("#week_number").change();
                     }
@@ -187,7 +192,7 @@
         $(document).ready(function () {
             initWeekNumberSelect();
             initSubmitButton();
-            createReportTableEmptyRow();
+            initMoreEntry();
         });
     </script>
 </head>
@@ -213,6 +218,7 @@
         </thead>
         <tbody></tbody>
     </table>
+    <a id="more_entry" href="">More entry</a>
 
     <button id="submit">submit</button>
 </body>

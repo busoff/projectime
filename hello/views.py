@@ -30,7 +30,6 @@ def get_entries(request):
         entries.append(entry_struct)
 
     data = json.dumps(entries)
-    print(data)
     return HttpResponse(data)
     
 @csrf_exempt
@@ -39,7 +38,6 @@ def submit_entries(request):
     
     # delete existing entries from given dates
     for entry in entries:
-        print(entry["date"])
         ProjectTimeEntry.objects.filter(date=entry["date"]).delete()
 
     # add new entries
