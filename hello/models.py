@@ -23,7 +23,7 @@ class ProjectTimeEntry(models.Model):
     date = models.DateField('date')
 
     def __str__(self):
-        return '{}@{} on {}'.format(self.user, self.project, self.date)
+        return '{}@{} on {}: {}'.format(self.user, self.project, self.date, self.hour)
 
 
 

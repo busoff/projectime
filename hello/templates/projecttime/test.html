@@ -1,0 +1,222 @@
+<html>
+
+<head>
+    <title>This is an example for jquery</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
+        function ISOWeekDay(date) {
+            // as getDay() treat Sunday as first day of week, 
+            // here we use Monday as first day of week according to ISO-8601
+            return (date.getDay() == 0) ? 6 : date.getDay() - 1
+        }
+
+        function getISOWeek(date) {
+            date.setHours(0, 0, 0, 0);
+            // Thursday in current week decides the year.
+            date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+            // January 4 is always in week 1.
+            var week1 = new Date(date.getFullYear(), 0, 4);
+            // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+            return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
+                - 3 + (week1.getDay() + 6) % 7) / 7);
+        }
+
+        function getDateOfISOWeek(w, y) {
+            var simple = new Date(y, 0, 1 + (w - 1) * 7);
+            var dow = simple.getDay();
+            var ISOweekStart = simple;
+            if (dow <= 4)
+                ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+            else
+                ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+            return ISOweekStart;
+        }
+
+        function shortString(date) {
+            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        }
+
+        function plusDay(date, days) {
+            var newDate = new Date(date);
+            newDate.setDate(newDate.getDate() + days);
+            return newDate;
+        }
+
+        function createWeeklyReport(json) {
+            var entries = JSON.parse(json);
+            // report uses project as key and uses an array with size 7 as value. 
+            // This array represents hours spent from Monday to Sunday
+            var report = {}
+            for (var i = 0; i < entries.length; ++i) {
+                var entry = entries[i];
+
+                if (!(entry.project in report)) {
+                    // create default hour list for new project
+                    report[entry.project] = [0, 0, 0, 0, 0, 0, 0]
+                }
+
+                var date = new Date(entry.date);
+                report[entry.project][ISOWeekDay(date)] += entry.hour;
+            }
+            return report;
+        }
+
+        function fillReportTable(report) {
+            var report_table = $("#report_table");
+            report_table.children("tbody").remove();
+
+            var body = $("<tbody/>")
+            for (var project in report) {
+                var projectSelect = $("<select/>").append(
+                    $("<option/>").val("PCTRL4").text("PCTRL4"),
+                    $("<option/>").val("wireless gateway").text("wireless gateway"));
+                body.append(
+                    $("<tr/>").append(
+                        projectSelect.val(project),
+                        $("<td/>").append($("<input/>").val(report[project][0])),
+                        $("<td/>").append($("<input/>").val(report[project][1])),
+                        $("<td/>").append($("<input/>").val(report[project][2])),
+                        $("<td/>").append($("<input/>").val(report[project][3])),
+                        $("<td/>").append($("<input/>").val(report[project][4])),
+                        $("<td/>").append($("<input/>").val(report[project][5])),
+                        $("<td/>").append($("<input/>").val(report[project][6]))));
+            }
+
+            body.append(createReportTableEmptyRow());
+            report_table.append(body)
+        }
+
+        function populateWeekNumberSelect(maxWeek) {
+            // populate #week_number select options
+            for (var week = 1; week <= maxWeek; ++week) {
+                $("#week_number").append($("<option />").val(week).text(week));
+            }
+        }
+
+        function requestAndLoadEntries(user, from, to) {
+            $.get("entries",
+                { "user": user, "from": from, "to": to },
+                function (data, status) {
+                    var report = createWeeklyReport(data);
+                    fillReportTable(report);
+                    $("body").append($("<p/>").text("received: " + data));
+                });
+        }
+
+        function postEntries(entries, handler) {
+            $("body").append($("<p/>").text("post: " + JSON.stringify(entries)));
+            $.ajax({
+                type: 'post',
+                url: 'submit_entries',
+                data: JSON.stringify(entries),
+                contentType: "application/json; charset=utf-8",
+                traditional: true,
+                success: handler
+            });
+        }
+
+        function splitReportToEntries() {
+            var entries = [];
+            for (var tr of $("#report_table tbody tr")) {
+                var tds = $(tr).children();
+                var currentYear = (new Date()).getFullYear();
+                var week = $("#week_number").val();
+                var fromDate = getDateOfISOWeek(week, currentYear);
+                var val = $(tds[1]).children().val();
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 0)), hour: $(tds[1]).children().val() });
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 1)), hour: $(tds[2]).children().val() });
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 2)), hour: $(tds[3]).children().val() });
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 3)), hour: $(tds[4]).children().val() });
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 4)), hour: $(tds[5]).children().val() });
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 5)), hour: $(tds[6]).children().val() });
+                entries.push({ user: "88502062", project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 6)), hour: $(tds[7]).children().val() });
+            }
+            return entries;
+        }
+
+        function initWeekNumberSelect() {
+            var now = new Date();
+            var currentWeek = getISOWeek(now);
+            populateWeekNumberSelect(currentWeek);
+
+            // attach #week_number "change" event
+            $("#week_number").change(function () {
+                var week = $(this).val()
+                var from = getDateOfISOWeek(week, now.getFullYear())
+                var to = new Date(from.getTime());
+                to.setDate(to.getDate() + 6);
+                alert(from+":"+to);
+                alert(shortString(from) + ":" + shortString(to));
+                requestAndLoadEntries("88502062", shortString(from), shortString(to));
+            });
+
+            // select current week and trigger onchange event
+            $("#week_number").val(currentWeek).change();
+        }
+
+        function createReportTableEmptyRow() {
+            // add one blank line for new input
+            var projectSelect = $("<select/>").append(
+                $("<option/>").val("PCTRL4").text("PCTRL4"),
+                $("<option/>").val("wireless gateway").text("wireless gateway"));
+            var row = $("<tr/>").append(
+                projectSelect,
+                $("<td/>").append($("<input/>")),
+                $("<td/>").append($("<input/>")),
+                $("<td/>").append($("<input/>")),
+                $("<td/>").append($("<input/>")),
+                $("<td/>").append($("<input/>")),
+                $("<td/>").append($("<input/>")),
+                $("<td/>").append($("<input/>")));
+
+            return row;
+        }
+
+        function initSubmitButton() {
+            $("#submit").click(function () {
+                var entries = splitReportToEntries();
+                postEntries(entries, function(date, status)
+                {
+                    if (status == "success")
+                    {
+                        alert("request week again");
+                        // simulate user selects week number to refresh report table from server
+                        $("#week_number").change();
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            initWeekNumberSelect();
+            initSubmitButton();
+            createReportTableEmptyRow();
+        });
+    </script>
+</head>
+
+<body>
+
+    <select id="week_number">
+    </select>
+
+    <table id="report_table">
+        <thead>
+            <tr>
+                <th scope="col"> Project </th>
+                <th scope="col"> Monday </th>
+                <th scope="col"> Tuesday </th>
+                <th scope="col"> Wednesday </th>
+                <th scope="col"> Thursday </th>
+                <th scope="col"> Friday </th>
+                <th scope="col"> Saturday </th>
+                <th scope="col"> Sunday </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button id="submit">submit</button>
+</body>
+
+</html>

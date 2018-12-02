@@ -1,0 +1,93 @@
+<html>
+
+<head>
+  <script>
+    function send(method, action, data) {
+      // construct an HTTP request
+      var xhr = new XMLHttpRequest();
+      xhr.open(method, action, false);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      
+      alert(data)
+      // send the collected data as JSON
+      xhr.send(data);
+    }
+    
+    function onload()
+    {
+      var form = document.getElementById("report_form");
+      form.onsubmit = function doSubmit(e) {
+
+        var table = document.getElementById("report_table");
+        var report = {}
+        report["user"] = "Wang Xin"
+        report.records = []
+        //loops through rows (skip heading row)
+        for (var i = 1; i < table.rows.length; i++) {
+          //gets cells of current row
+          var cells = table.rows.item(i).cells;
+          var fromDate =  new Date(2018, 0, 1);
+          //loops through from "Monday" cell
+          for (var j = 2; j < cells.length; j++) {
+            var record = {"date":"2018/1/1", "project":"", "detail":"", hour:0};
+            record.project = cells.item(0).innerHTML;
+            record.detail = cells.item(1).innerHTML;
+            record.hour = cells.item(j).innerHTML;
+            report.records.push(record);
+          }
+        }
+
+        var form = document.getElementById("report_form");
+        send(form.method, form.action, JSON.stringify(report))
+      }
+    }
+
+    
+  </script>
+</head>
+
+<body onload="onload()">
+  <form id="report_form"  action="/projecttime/report/" method="POST">
+    {% csrf_token %}
+    <table id="report_table">
+      <tr>
+        <th scope="col"> Project </th>
+        <th scope="col"> Detail </th>
+        <th scope="col"> Monday </th>
+        <th scope="col"> Tuesday </th>
+        <th scope="col"> Wednesday </th>
+        <th scope="col"> Thur. </th>
+        <th scope="col"> Friday </th>
+        <th scope="col"> Saturday </th>
+        <th scope="col"> Sunday </th>
+      </tr>
+
+      <tr>
+        <td> wireless gateway</td>
+        <td></td>
+        <td > 7 </td>
+        <td > 8 </td>
+        <td > 8 </td>
+        <td > 8 </td>
+        <td > 8 </td>
+        <td > </td>
+        <td > </td>
+      </tr>
+
+      <tr>
+        <td> department meeting</td>
+        <td></td>
+        <td> 1 </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+        <td> </td>
+      </tr>
+    </table>
+    <button type="submit">submit</button>
+  </form>
+</body>
+
+</html>

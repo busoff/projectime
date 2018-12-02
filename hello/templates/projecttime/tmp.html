@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.descendants * { 
+    display: block;
+    border: 2px solid lightgrey;
+    color: lightgrey;
+    padding: 5px;
+    margin: 15px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("table").children().css({"color": "red", "border": "2px solid red"});
+});
+</script>
+</head>
+<body>
+
+<div class="descendants" style="width:500px;">div (current element) 
+  <p class="first">p (child)
+    <span>span (grandchild)</span>     
+  </p>
+  <p class="second">p (child)
+    <span>span (grandchild)</span>
+  </p> 
+</div>
+
+<table id="report_table">
+    <thead>
+        <tr>
+            <th scope="col"> Project </th>
+            <th scope="col"> Monday </th>
+            <th scope="col"> Tuesday </th>
+            <th scope="col"> Wednesday </th>
+            <th scope="col"> Thursday </th>
+            <th scope="col"> Friday </th>
+            <th scope="col"> Saturday </th>
+            <th scope="col"> Sunday </th>
+        </tr>
+         <tr>
+            <th scope="col"> Project </th>
+            <th scope="col"> Monday </th>
+            <th scope="col"> Tuesday </th>
+            <th scope="col"> Wednesday </th>
+            <th scope="col"> Thursday </th>
+            <th scope="col"> Friday </th>
+            <th scope="col"> Saturday </th>
+            <th scope="col"> Sunday </th>
+        </tr>
+
+    </table>
+
+</body>
+</html>
