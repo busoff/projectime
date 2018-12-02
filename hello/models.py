@@ -10,7 +10,7 @@ class Project(models.Model):
         return self.name
 
 class User(models.Model):
-    user_id = models.IntegerField(primary_key=True)
+    user_id = models.CharField(primary_key=True, max_length=16)
     name = models.CharField("User name", max_length=64)
 
     def __str__(self):

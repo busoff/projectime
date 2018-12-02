@@ -15,22 +15,7 @@ def user_list(request):
     context = {
         'user_list': User.objects.all()
     }
-    return render(request, 'projecttime/user.html', context)
-
-def user_id(request, user_id):
-    template = loader.get_template("projecttime/index.html")
-    context = {
-        "project_time_list": ProjectTimeEntry.objects.filter(user__user_id=user_id)
-    }
-
-    return HttpResponse(template.render(context, request))
-
-def user_name(request, name):
-    template = loader.get_template("projecttime/index.html")
-    context = {
-        "project_time_list": ProjectTimeEntry.objects.filter(user__name=name)
-    }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'projecttime/users.html', context)
 
 def get_entries(request):
     entries = []
