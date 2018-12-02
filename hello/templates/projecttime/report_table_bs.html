@@ -98,13 +98,13 @@
                     var week = $("#week_number").val();
                     var fromDate = getDateOfISOWeek(week, currentYear);
                     var val = $(tds[1]).children().val();
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 0)), hour: $(tds[1]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 1)), hour: $(tds[2]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 2)), hour: $(tds[3]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 3)), hour: $(tds[4]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 4)), hour: $(tds[5]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 5)), hour: $(tds[6]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 6)), hour: $(tds[7]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 0)), hour: $(tds[1]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 1)), hour: $(tds[2]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 2)), hour: $(tds[3]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 3)), hour: $(tds[4]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 4)), hour: $(tds[5]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 5)), hour: $(tds[6]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 6)), hour: $(tds[7]).children().val() });
                 }
                 return entries;
             }
@@ -153,7 +153,7 @@
                     var entries = splitReportToEntries();
                     postEntries(entries, function (date, status) {
                         if (status == "success") {
-                            // simulate user selects week number to refresh report table from server
+                            // simulate user selects week number to refetch data from server
                             $("#week_number").change();
                         }
                     });
