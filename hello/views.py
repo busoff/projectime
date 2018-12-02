@@ -17,6 +17,11 @@ def user_list(request):
     }
     return render(request, 'projecttime/users.html', context)
 
+def get_projects(request):
+    projects = [project.name for project in Project.objects.all()]
+    data = json.dumps(projects)
+    return HttpResponse(data)
+
 def get_entries(request):
     entries = []
     for entry in ProjectTimeEntry.objects.filter(user__user_id=request.GET['user'],
@@ -28,7 +33,7 @@ def get_entries(request):
                         'hour': entry.hour}
 
         entries.append(entry_struct)
-
+    
     data = json.dumps(entries)
     return HttpResponse(data)
     

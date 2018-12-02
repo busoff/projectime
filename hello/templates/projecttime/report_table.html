@@ -42,8 +42,7 @@
             return newDate;
         }
 
-        function createWeeklyReport(json) {
-            var entries = JSON.parse(json);
+        function createWeeklyReport(entries) {
             // report uses project as key and uses an array with size 7 as value. 
             // This array represents hours spent from Monday to Sunday
             var report = {}
@@ -60,6 +59,12 @@
             }
             return report;
         }
+        
+        function createProjectSelect()
+        {
+            var select = $("#hidden_project_select").clone().show();
+            return select;
+        }
 
         function fillReportTable(report) {
             var report_table = $("#report_table");
@@ -67,12 +72,9 @@
 
             var body = $("<tbody/>")
             for (var project in report) {
-                var projectSelect = $("<select/>").append(
-                    $("<option/>").val("PCTRL4").text("PCTRL4"),
-                    $("<option/>").val("wireless gateway").text("wireless gateway"));
                 body.append(
                     $("<tr/>").append(
-                        projectSelect.val(project),
+                        createProjectSelect().val(project),
                         $("<td/>").append($("<input/>").val(report[project][0])),
                         $("<td/>").append($("<input/>").val(report[project][1])),
                         $("<td/>").append($("<input/>").val(report[project][2])),
@@ -97,9 +99,10 @@
             $.get("entries",
                 { "user": user, "from": from, "to": to },
                 function (data, status) {
-                    var report = createWeeklyReport(data);
-                    fillReportTable(report);
                     $("body").append($("<p/>").text("received: " + data));
+                    var entries = JSON.parse(data);
+                    var report = createWeeklyReport(entries);
+                    fillReportTable(report);
                 });
         }
 
@@ -164,8 +167,9 @@
             var projectSelect = $("<select/>").append(
                 $("<option/>").val("PCTRL4").text("PCTRL4"),
                 $("<option/>").val("wireless gateway").text("wireless gateway"));
+            
             var row = $("<tr/>").append(
-                projectSelect,
+                createProjectSelect(),
                 $("<td/>").append($("<input/>")),
                 $("<td/>").append($("<input/>")),
                 $("<td/>").append($("<input/>")),
@@ -188,10 +192,28 @@
                 });
             });
         }
-
+        
+        // It requests project list from server and create a hidden
+        // project select HTML element. This element will be used later 
+        // for creating report table
+        function initHiddenProjectSelect()
+        {
+            $.get("projects", function(data, status)
+            {
+                projects = JSON.parse(data)
+                var select = $("<select/>").attr("id", "hidden_project_select").hide();
+                for(var project of projects)
+                {
+                    select.append($("<option/>").val(project).text(project));
+                }
+                $("body").append(select);
+            });
+        }
+        
         $(document).ready(function () {
             initWeekNumberSelect();
             initSubmitButton();
+            initHiddenProjectSelect();
             initMoreEntry();
         });
     </script>
