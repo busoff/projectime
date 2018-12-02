@@ -13,60 +13,210 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'bootstrap/4.1.3/css/bootstrap.min.css' %}">
 
+    <script>
+            function createWeeklyReport(entries) {
+                // report uses project as key and uses an array with size 7 as value. 
+                // This array represents hours spent from Monday to Sunday
+                var report = {}
+                for (var i = 0; i < entries.length; ++i) {
+                    var entry = entries[i];
+    
+                    if (!(entry.project in report)) {
+                        // create default hour list for new project
+                        report[entry.project] = [0, 0, 0, 0, 0, 0, 0]
+                    }
+    
+                    var date = new Date(entry.date);
+                    report[entry.project][ISOWeekDay(date)] += entry.hour;
+                }
+                return report;
+            }
+            
+            function createProjectSelect()
+            {
+                var select = $("#hidden_project_select").clone().show().addClass("form-control form-control-sm");
+                return select;
+            }
+    
+            function fillReportTable(report) {
+                var report_table = $("#report_table");
+                report_table.children("tbody").remove();
+    
+                var body = $("<tbody/>")
+                for (var project in report) {
+                    body.append(
+                        $("<tr/>").append(
+                            $("<td/>").append(createProjectSelect().val(project)),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][0])),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][1])),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][2])),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][3])),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][4])),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][5])),
+                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][6]))));
+                }
+    
+                body.append(createReportTableEmptyRow());
+                report_table.append(body)
+            }
+    
+            function populateWeekNumberSelect(maxWeek) {
+                // populate #week_number select options
+                for (var week = 1; week <= maxWeek; ++week) {
+                    $("#week_number").append($("<option />").val(week).text(week));
+                }
+            }
+    
+            function requestAndLoadEntries(user, from, to) {
+                $.get("entries",
+                    { "user": user, "from": from, "to": to },
+                    function (data, status) {
+                        $("body").append($("<p/>").text("received: " + data));
+                        var entries = JSON.parse(data);
+                        var report = createWeeklyReport(entries);
+                        fillReportTable(report);
+                    });
+            }
+    
+            function postEntries(entries, handler) {
+                $("body").append($("<p/>").text("post: " + JSON.stringify(entries)));
+                $.ajax({
+                    type: 'post',
+                    url: 'submit_entries',
+                    data: JSON.stringify(entries),
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    success: handler
+                });
+            }
+    
+            function splitReportToEntries() {
+                var entries = [];
+                for (var tr of $("#report_table tbody tr")) {
+                    var tds = $(tr).children();
+                    var currentYear = (new Date()).getFullYear();
+                    var week = $("#week_number").val();
+                    var fromDate = getDateOfISOWeek(week, currentYear);
+                    var val = $(tds[1]).children().val();
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 0)), hour: $(tds[1]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 1)), hour: $(tds[2]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 2)), hour: $(tds[3]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 3)), hour: $(tds[4]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 4)), hour: $(tds[5]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 5)), hour: $(tds[6]).children().val() });
+                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).val(), date: shortString(plusDay(fromDate, 6)), hour: $(tds[7]).children().val() });
+                }
+                return entries;
+            }
+    
+            function initWeekNumberSelect() {
+                var now = new Date();
+                var currentWeek = getISOWeek(now);
+                populateWeekNumberSelect(currentWeek);
+    
+                // attach #week_number "change" event handler which request entries from server
+                $("#week_number").change(function () {
+                    var week = $(this).val()
+                    var from = getDateOfISOWeek(week, now.getFullYear())
+                    var to = new Date(from.getTime());
+                    to.setDate(to.getDate() + 6);
+                    requestAndLoadEntries($("#user_id").val(), shortString(from), shortString(to));
+                });
+    
+                // select current week and trigger onchange event
+                $("#week_number").val(currentWeek).change();
+            }
+    
+            function initMoreEntry() {
+                $("#more_entry").click(function (event) {
+                    event.preventDefault();
+                    $("#report_table tbody").append(createReportTableEmptyRow());
+                });
+            }
+    
+            function createReportTableEmptyRow() {
+                var row = $("<tr/>").append(
+                    $("<td/>").append(createProjectSelect()),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
+                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")));
+    
+                return row;
+            }
+    
+            function initSubmitButton() {
+                $("#submit").click(function () {
+                    var entries = splitReportToEntries();
+                    postEntries(entries, function (date, status) {
+                        if (status == "success") {
+                            // simulate user selects week number to refresh report table from server
+                            $("#week_number").change();
+                        }
+                    });
+                });
+            }
+            
+            // It requests project list from server and create a hidden
+            // project select HTML element. This element will be used later 
+            // for creating report table
+            function initHiddenProjectSelect()
+            {
+                $.get("projects", function(data, status)
+                {
+                    projects = JSON.parse(data)
+                    var select = $("<select/>").attr("id", "hidden_project_select").hide();
+                    for(var project of projects)
+                    {
+                        select.append($("<option/>").val(project).text(project));
+                    }
+                    $("body").append(select);
+                });
+            }
+            
+            $(document).ready(function () {
+                initWeekNumberSelect();
+                initSubmitButton();
+                initHiddenProjectSelect();
+                initMoreEntry();
+            });
+        </script>
+
     <title>Hello, world!</title>
 </head>
 
 <body>
-    <h1>Hello, Xin!</h1>
-    <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th scope="col"> Project </th>
-                    <th scope="col"> Monday </th>
-                    <th scope="col"> Tuesday </th>
-                    <th scope="col"> Wednesday </th>
-                    <th scope="col"> Thursday </th>
-                    <th scope="col"> Friday </th>
-                    <th scope="col"> Saturday </th>
-                    <th scope="col"> Sunday </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <select class="form-control form-control-sm">
-                            <option>wireless gateway</option>
-                            <option>PCTRL4</option>
-                        </select>
-                    </td>
-                    <td><input class="form-control form-control-sm" type="text" value="1" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="2" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="3" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="4" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="5" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="6" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="7" /></td>
-                </tr>
-                <tr>
-                    <td>
-                        <select class="form-control form-control-sm">
-                            <option>wireless gateway</option>
-                            <option>PCTRL4</option>
-                        </select>
-                    </td>
-                    <td><input class="form-control form-control-sm" type="text" value="1" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="2" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="3" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="4" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="5" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="6" /></td>
-                    <td><input class="form-control form-control-sm" type="text" value="7" /></td>
-                </tr>
-            </tbody>
-        </table>
+    <h1> Hello, {{ user_name }}</h1>
+    <input type="hidden" id="user_id" value="{{user_id}}">
     
-        <button type="button" class="btn btn-light">More Item</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+
+    <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                    <select class="custom-select" id="week_number">
+                    </select>
+            </div>
+            <button type="button" class="btn btn-light" id="more_entry">More Item</button>
+            <button class="btn btn-outline-secondary" type="button" id="submit">Submit</button>
+    </div>
+
+    <table class="table table-striped table-sm" id="report_table">
+        <thead>
+            <tr>
+                <th scope="col"> Project </th>
+                <th scope="col"> Monday </th>
+                <th scope="col"> Tuesday </th>
+                <th scope="col"> Wednesday </th>
+                <th scope="col"> Thursday </th>
+                <th scope="col"> Friday </th>
+                <th scope="col"> Saturday </th>
+                <th scope="col"> Sunday </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
