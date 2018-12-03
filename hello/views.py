@@ -17,22 +17,29 @@ def user_list(request):
     }
     return render(request, 'projecttime/users.html', context)
 
+def projecttime(request, user_id):
+    user = User.objects.get(user_id=user_id)
+
+    # booststrap style
+    return render(request, 'projecttime/report_table_bs.html', {'user_name':user.name, 'user_id':user.user_id})
+
+    # standad style
+    # return render(request, 'projecttime/report_table.html', {'user_name':user.name, 'user_id':user.user_id})
+
 def get_projects(request):
     projects = [project.name for project in Project.objects.all()]
     data = json.dumps(projects)
     return HttpResponse(data)
 
 def get_entries(request):
-    entries = []
-    for entry in ProjectTimeEntry.objects.filter(user__user_id=request.GET['user'],
-                                                 date__gte=request.GET['from'],
-                                                 date__lte=request.GET['to']):
-        entry_struct = {'user': entry.user.name,
-                        'project': entry.project.name,
-                        'date': entry.date.isoformat(),
-                        'hour': entry.hour}
+    records = ProjectTimeEntry.objects.filter(user__user_id=request.GET['user'],
+                                              date__gte=request.GET['from'],
+                                              date__lte=request.GET['to'])
 
-        entries.append(entry_struct)
+    entries = [{'user': r.user.name,
+                'project': r.project.name,
+                'date': r.date.isoformat(),
+                'hour': r.hour} for r in records]
     
     data = json.dumps(entries)
     return HttpResponse(data)
@@ -65,14 +72,10 @@ def submit_entries(request):
 
     return HttpResponse("OK")
 
-def projecttime(request, user_id):
-    user = User.objects.get(user_id=user_id)
 
-    # booststrap style
-    return render(request, 'projecttime/report_table_bs.html', {'user_name':user.name, 'user_id':user.user_id})
 
-    # standad style
-    # return render(request, 'projecttime/report_table.html', {'user_name':user.name, 'user_id':user.user_id})
-
+#################
+# Test function #
+#################
 def test(request):
     return render(request, 'projecttime/report_table_bs.html', {})
