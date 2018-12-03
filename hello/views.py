@@ -11,11 +11,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def user_list(request):
+def index(request):
     context = {
         'user_list': User.objects.all()
     }
-    return render(request, 'projecttime/users.html', context)
+    return render(request, 'projecttime/index.html', context)
 
 def projecttime(request, user_id):
     user = User.objects.get(user_id=user_id)
