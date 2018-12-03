@@ -1,0 +1,6 @@
+- [ ] add more project
+- [ ] support project search in case there are too many projects
+- [ ] refactor server get & post out of javascript blob
+- [ ] refactor model out of javascript blob. e.g.
+- [ ] add check against user input for hour and give color indication for error, warning
+- [ ] remove submit button???
