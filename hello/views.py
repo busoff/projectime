@@ -29,6 +29,7 @@ def projecttime(request, user_id):
 def get_projects(request):
     projects = [project.name for project in Project.objects.all()]
     data = json.dumps(projects)
+    print(data)
     return HttpResponse(data)
 
 def get_entries(request):
@@ -42,6 +43,7 @@ def get_entries(request):
                 'hour': r.hour} for r in records]
     
     data = json.dumps(entries)
+    print(entries)
     return HttpResponse(data)
     
 @csrf_exempt
@@ -78,4 +80,4 @@ def submit_entries(request):
 # Test function #
 #################
 def test(request):
-    return render(request, 'projecttime/report_table_bs.html', {})
+    return render(request, 'projecttime/bootstrap.html', {})
