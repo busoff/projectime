@@ -10,7 +10,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 def index(request):
     context = {
         'user_list': User.objects.all()
@@ -22,9 +21,6 @@ def projecttime(request, user_id):
 
     # booststrap style
     return render(request, 'projecttime/report_table_bs.html', {'user_name':user.name, 'user_id':user.user_id})
-
-    # standad style
-    # return render(request, 'projecttime/report_table.html', {'user_name':user.name, 'user_id':user.user_id})
 
 def get_projects(request):
     projects = [project.name for project in Project.objects.all()]
@@ -50,7 +46,11 @@ def get_entries(request):
 def submit_entries(request):
     entries=json.loads(request.body)
     
-    # delete existing entries from given dates
+    #FIXME: there is flaw that if the new entries are invalid, e.g, invalid project,
+    # the existing entries will be removed and no entries added to datebase
+    #
+    # We should make sure  the existing entries are not deleted until all 
+    # the new entries are valid to be added to database
     for entry in entries:
         ProjectTimeEntry.objects.filter(date=entry["date"]).delete()
 
