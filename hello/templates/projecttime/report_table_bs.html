@@ -89,23 +89,43 @@
                     success: handler
                 });
             }
-    
-            function splitReportToEntries() {
+            
+            function extractTableData()
+            {
+                var tblData = []
+                $("#report_table tbody tr").each(function(row, tr)
+                {
+                    var row = $(tr).find("td").map(function(idx, td)
+                    {
+                        return $(td).children().val();
+                    }).get();
+                    
+                    tblData.push(row);
+                });
+                
+                alert(JSON.stringify(tblData))
+                return tblData;
+            }
+
+            function getEntriesFromTable() {
+                var tableData = extractTableData();
+                
                 var entries = [];
-                for (var tr of $("#report_table tbody tr")) {
-                    var tds = $(tr).children();
-                    var currentYear = (new Date()).getFullYear();
-                    var week = $("#week_number").val();
-                    var fromDate = getDateOfISOWeek(week, currentYear);
-                    var val = $(tds[1]).children().val();
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 0)), hour: $(tds[1]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 1)), hour: $(tds[2]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 2)), hour: $(tds[3]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 3)), hour: $(tds[4]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 4)), hour: $(tds[5]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 5)), hour: $(tds[6]).children().val() });
-                    entries.push({ user: $("#user_id").val(), project: $(tds[0]).children().val(), date: shortString(plusDay(fromDate, 6)), hour: $(tds[7]).children().val() });
+                var currentYear = (new Date()).getFullYear();
+                var week = $("#week_number").val();
+                var fromDate = getDateOfISOWeek(week, currentYear);
+                var user = $("#user_id").val();
+                for (var row of tableData)
+                {
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 0)), "hour": row[1] });
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 1)), "hour": row[2] });
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 2)), "hour": row[3] });
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 3)), "hour": row[4] });
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 4)), "hour": row[5] });
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 5)), "hour": row[6] });
+                    entries.push({ "user": user, "project": row[0], "date": shortString(plusDay(fromDate, 6)), "hour": row[7] });
                 }
+                
                 return entries;
             }
     
@@ -150,7 +170,7 @@
     
             function initSubmitButton() {
                 $("#submit").click(function () {
-                    var entries = splitReportToEntries();
+                    var entries = getEntriesFromTable();
                     postEntries(entries, function (date, status) {
                         if (status == "success") {
                             // simulate user selects week number to refetch data from server
