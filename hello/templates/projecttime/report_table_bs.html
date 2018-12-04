@@ -12,6 +12,18 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'bootstrap/4.1.3/css/bootstrap.min.css' %}">
+    
+    <!-- hide spin box in number input  -->
+    <style>
+        input[type='number'] {
+        -moz-appearance:textfield;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+    </style>
 
     <script>
         function createWeeklyReport(entries) {
@@ -46,13 +58,13 @@
                 body.append(
                     $("<tr/>").append(
                         $("<td/>").append(createProjectSelect().val(project)),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][0])),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][1])),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][2])),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][3])),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][4])),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][5])),
-                        $("<td/>").append(createNumberInput(0.1).val(report[project][6]))));
+                        $("<td/>").append(createHourInput().val(report[project][0])),
+                        $("<td/>").append(createHourInput().val(report[project][1])),
+                        $("<td/>").append(createHourInput().val(report[project][2])),
+                        $("<td/>").append(createHourInput().val(report[project][3])),
+                        $("<td/>").append(createHourInput().val(report[project][4])),
+                        $("<td/>").append(createHourInput().val(report[project][5])),
+                        $("<td/>").append(createHourInput().val(report[project][6]))));
             }
 
             body.append(createReportTableEmptyRow());
@@ -150,31 +162,25 @@
             });
         }
         
-        function createNumberInput(step, min, max)
+        function createHourInput()
         {
-            var numberInput = $("<input/>").addClass("form-control").attr("type", "number");
-            if (typeof min != 'undefined')
-                numberInput.attr("min", min);
-            
-            if (typeof max != "undefined")
-                numberInput.attr("max", max);
-
-            if (typeof step != "undefined")
-                numberInput.attr("step", step);
-
-            return numberInput;
+            return $("<input/>").addClass("form-control")
+                                .attr("type", "number")
+                                .attr("min", 0)
+                                .attr("max", 24)
+                                .attr("step", 0.1);
         }
 
         function createReportTableEmptyRow() {
             var row = $("<tr/>").append(
                 $("<td/>").append(createProjectSelect()),
-                $("<td/>").append(createNumberInput(0.1)),
-                $("<td/>").append(createNumberInput(0.1)),
-                $("<td/>").append(createNumberInput(0.1)),
-                $("<td/>").append(createNumberInput(0.1)),
-                $("<td/>").append(createNumberInput(0.1)),
-                $("<td/>").append(createNumberInput(0.1)),
-                $("<td/>").append(createNumberInput(0.1)));
+                $("<td/>").append(createHourInput()),
+                $("<td/>").append(createHourInput()),
+                $("<td/>").append(createHourInput()),
+                $("<td/>").append(createHourInput()),
+                $("<td/>").append(createHourInput()),
+                $("<td/>").append(createHourInput()),
+                $("<td/>").append(createHourInput()));
 
             return row;
         }
