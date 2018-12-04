@@ -46,13 +46,13 @@
                 body.append(
                     $("<tr/>").append(
                         $("<td/>").append(createProjectSelect().val(project)),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][0])),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][1])),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][2])),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][3])),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][4])),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][5])),
-                        $("<td/>").append($("<input/>").addClass("form-control").val(report[project][6]))));
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][0])),
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][1])),
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][2])),
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][3])),
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][4])),
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][5])),
+                        $("<td/>").append(createNumberInput(0.1).val(report[project][6]))));
             }
 
             body.append(createReportTableEmptyRow());
@@ -149,17 +149,32 @@
                 $("#report_table tbody").append(createReportTableEmptyRow());
             });
         }
+        
+        function createNumberInput(step, min, max)
+        {
+            var numberInput = $("<input/>").addClass("form-control").attr("type", "number");
+            if (typeof min != 'undefined')
+                numberInput.attr("min", min);
+            
+            if (typeof max != "undefined")
+                numberInput.attr("max", max);
+
+            if (typeof step != "undefined")
+                numberInput.attr("step", step);
+
+            return numberInput;
+        }
 
         function createReportTableEmptyRow() {
             var row = $("<tr/>").append(
                 $("<td/>").append(createProjectSelect()),
-                $("<td/>").append($("<input/>").addClass("form-control")),
-                $("<td/>").append($("<input/>").addClass("form-control")),
-                $("<td/>").append($("<input/>").addClass("form-control")),
-                $("<td/>").append($("<input/>").addClass("form-control")),
-                $("<td/>").append($("<input/>").addClass("form-control")),
-                $("<td/>").append($("<input/>").addClass("form-control")),
-                $("<td/>").append($("<input/>").addClass("form-control")));
+                $("<td/>").append(createNumberInput(0.1)),
+                $("<td/>").append(createNumberInput(0.1)),
+                $("<td/>").append(createNumberInput(0.1)),
+                $("<td/>").append(createNumberInput(0.1)),
+                $("<td/>").append(createNumberInput(0.1)),
+                $("<td/>").append(createNumberInput(0.1)),
+                $("<td/>").append(createNumberInput(0.1)));
 
             return row;
         }
@@ -186,7 +201,7 @@
             // This will fix the issue that project isn't shown on report table. 
             // This is because the response for GET-entries might arrive earlier than GET-projects
             // even though GET-projects request is issued firstly. In this case, the report table 
-            // will be filled and the project list is not avaialbe yet.
+            // will be filled while the project list is not available yet.
             console.log("GET projects synchronously...")
             $.ajax({
                 type: 'GET',
