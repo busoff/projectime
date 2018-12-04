@@ -68,10 +68,11 @@
             }
     
             function requestAndLoadEntries(user, from, to) {
+                console.log("GET entries...")
                 $.get("entries",
                     { "user": user, "from": from, "to": to },
                     function (data, status) {
-                        $("body").append($("<p/>").text("received: " + data));
+                        console.log("GET entries: " + data)
                         var entries = JSON.parse(data);
                         var report = createWeeklyReport(entries);
                         fillReportTable(report);
@@ -79,7 +80,7 @@
             }
     
             function postEntries(entries, handler) {
-                $("body").append($("<p/>").text("post: " + JSON.stringify(entries)));
+                console.log("POST submit_entries ... params: " + JSON.stringify(entries))
                 $.ajax({
                     type: 'post',
                     url: 'submit_entries',
@@ -186,8 +187,10 @@
             // for creating report table
             function initHiddenProjectSelect()
             {
+                console.log("GET projects...")
                 $.get("projects", function(data, status)
                 {
+                    console.log("GET projects: " + data)
                     projects = JSON.parse(data)
                     var select = $("<select/>").attr("id", "hidden_project_select").hide();
                     for(var project of projects)
