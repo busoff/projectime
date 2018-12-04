@@ -34,7 +34,7 @@
             
             function createProjectSelect()
             {
-                var select = $("#hidden_project_select").clone().show().addClass("form-control form-control-sm");
+                var select = $("#hidden_project_select").clone().show().addClass("custom-select");
                 return select;
             }
     
@@ -47,13 +47,13 @@
                     body.append(
                         $("<tr/>").append(
                             $("<td/>").append(createProjectSelect().val(project)),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][0])),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][1])),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][2])),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][3])),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][4])),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][5])),
-                            $("<td/>").append($("<input/>").addClass("form-control form-control-sm").val(report[project][6]))));
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][0])),
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][1])),
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][2])),
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][3])),
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][4])),
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][5])),
+                            $("<td/>").append($("<input/>").addClass("form-control").val(report[project][6]))));
                 }
     
                 body.append(createReportTableEmptyRow());
@@ -156,13 +156,13 @@
             function createReportTableEmptyRow() {
                 var row = $("<tr/>").append(
                     $("<td/>").append(createProjectSelect()),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")),
-                    $("<td/>").append($("<input/>").addClass("form-control form-control-sm")));
+                    $("<td/>").append($("<input/>").addClass("form-control")),
+                    $("<td/>").append($("<input/>").addClass("form-control")),
+                    $("<td/>").append($("<input/>").addClass("form-control")),
+                    $("<td/>").append($("<input/>").addClass("form-control")),
+                    $("<td/>").append($("<input/>").addClass("form-control")),
+                    $("<td/>").append($("<input/>").addClass("form-control")),
+                    $("<td/>").append($("<input/>").addClass("form-control")));
     
                 return row;
             }
