@@ -78,9 +78,16 @@
                     });
             }
     
-            function postEntries(entries, success, fail) {
+            function postEntries(entries, handler) {
                 $("body").append($("<p/>").text("post: " + JSON.stringify(entries)));
-                $.post("submit_entries", JSON.stringify(entries), success, "application/json; charset=utf-8");
+                $.ajax({
+                    type: 'post',
+                    url: 'submit_entries',
+                    data: JSON.stringify(entries),
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    success: handler
+                });
             }
             
             function extractTableData()
@@ -96,7 +103,6 @@
                     tblData.push(row);
                 });
                 
-                alert(JSON.stringify(tblData))
                 return tblData;
             }
 
@@ -163,12 +169,14 @@
     
             function initSubmitButton() {
                 $("#submit").click(function () {
+                    // add warning class to indicate submit is ongoing
+                    $("#report_table tbody tr").addClass("table-warning")
                     var entries = getEntriesFromTable();
-                    postEntries(entries, function (date, status) {
-                        if (status == "success") {
-                            // simulate user selects week number to refetch data from server
-                            $("#week_number").change();
-                        }
+                    postEntries(entries, function () {
+                        // add warning class to indicate submit successes
+                        $("#report_table tbody tr").removeClass("table-warning")
+                        // simulate user selects week number to refetch data from server
+                        $("#week_number").change();
                     });
                 });
             }
