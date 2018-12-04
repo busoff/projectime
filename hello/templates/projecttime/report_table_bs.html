@@ -148,10 +148,17 @@
                 var from = getDateOfISOWeek(week, now.getFullYear())
                 var to = new Date(from.getTime());
                 to.setDate(to.getDate() + 6);
+
+                // update date in the heading of report table
+                $("#report_table thead").find(".date").each(function (idx, td) {
+                    $(td).text(shortString(plusDay(from, idx)));
+                })
+                
+                // request entries from server
                 requestAndLoadEntries($("#user_id").val(), shortString(from), shortString(to));
             });
 
-            // select current week and trigger onchange event
+            // select current week and trigger "change" event
             $("#week_number").val(currentWeek).change();
         }
 
@@ -254,13 +261,13 @@
         <thead>
             <tr>
                 <th scope="col"> Project </th>
-                <th scope="col"> Monday <small>2018-02-02</small> </th>
-                <th scope="col"> Tuesday <small>2018-02-02</small> </th>
-                <th scope="col"> Wednesday <small>2018-02-02</small> </th>
-                <th scope="col"> Thursday <small>2018-02-02</small> </th>
-                <th scope="col"> Friday <small>2018-02-02</small> </th>
-                <th scope="col"> Saturday <small>2018-02-02</small> </th>
-                <th scope="col"> Sunday <small>2018-02-02</small> </th>
+                <th scope="col"> Mon. <small class="date"></small> </th>
+                <th scope="col"> Tue. <small class="date"></small> </th>
+                <th scope="col"> Wed. <small class="date"></small> </th>
+                <th scope="col"> Thu. <small class="date"></small> </th>
+                <th scope="col"> Fri. <small class="date"></small> </th>
+                <th scope="col"> Sat. <small class="date"></small> </th>
+                <th scope="col"> Sun. <small class="date"></small> </th>
             </tr>
         </thead>
         <tbody></tbody>
