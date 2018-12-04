@@ -78,16 +78,9 @@
                     });
             }
     
-            function postEntries(entries, handler) {
+            function postEntries(entries, success, fail) {
                 $("body").append($("<p/>").text("post: " + JSON.stringify(entries)));
-                $.ajax({
-                    type: 'post',
-                    url: 'submit_entries',
-                    data: JSON.stringify(entries),
-                    contentType: "application/json; charset=utf-8",
-                    traditional: true,
-                    success: handler
-                });
+                $.post("submit_entries", JSON.stringify(entries), success, "application/json; charset=utf-8");
             }
             
             function extractTableData()
@@ -226,13 +219,13 @@
         <thead>
             <tr>
                 <th scope="col"> Project </th>
-                <th scope="col"> Monday </th>
-                <th scope="col"> Tuesday </th>
-                <th scope="col"> Wednesday </th>
-                <th scope="col"> Thursday </th>
-                <th scope="col"> Friday </th>
-                <th scope="col"> Saturday </th>
-                <th scope="col"> Sunday </th>
+                <th scope="col"> Monday <small>2018-02-02</small> </th>
+                <th scope="col"> Tuesday <small>2018-02-02</small> </th>
+                <th scope="col"> Wednesday <small>2018-02-02</small> </th>
+                <th scope="col"> Thursday <small>2018-02-02</small> </th>
+                <th scope="col"> Friday <small>2018-02-02</small> </th>
+                <th scope="col"> Saturday <small>2018-02-02</small> </th>
+                <th scope="col"> Sunday <small>2018-02-02</small> </th>
             </tr>
         </thead>
         <tbody></tbody>
