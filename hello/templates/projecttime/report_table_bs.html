@@ -45,7 +45,10 @@
         }
 
         function createProjectSelect() {
-            var select = $("#hidden_project_select").clone().show().addClass("custom-select");
+            var select = $("<select/>").addClass("custom-select");
+            for (var project of window["projects"]) {
+                select.append($("<option/>").val(project).text(project));
+            }
             return select;
         }
 
@@ -206,10 +209,7 @@
             });
         }
 
-        // It requests project list from server and create a hidden
-        // project select HTML element. This element will be used later 
-        // for creating report table
-        function initHiddenProjectSelect() {
+        function getProjectList() {
             // WORKAROUND: use synchronous call to get project list from server. 
             // This will fix the issue that project isn't shown on report table. 
             // This is because the response for GET-entries might arrive earlier than GET-projects
@@ -222,23 +222,16 @@
                 async: false,
                 success: function (data) {
                     console.log("GET projects: " + data)
-                    projects = JSON.parse(data)
-                    var select = $("<select/>").attr("id", "hidden_project_select").hide();
-                    for (var project of projects) {
-                        select.append($("<option/>").val(project).text(project));
-                    }
-                    $("body").append(select);
+                    window['projects'] = JSON.parse(data)
                 }
             });
         }
 
         $(document).ready(function () {
-            initHiddenProjectSelect();
+            getProjectList();
             initWeekNumberSelect();
             initSubmitButton();
             initMoreEntry();
-            var select = $("<select/>").addClass("custom-select").attr("data-live-search", "true");
-            $('body').append(select);
         });
     </script>
 
