@@ -75,9 +75,10 @@
         }
 
         function populateWeekNumberSelect(maxWeek) {
-            // populate #week_number select options
+            var year = (new Date()).getFullYear();
             for (var week = 1; week <= maxWeek; ++week) {
-                $("#week_number").append($("<option />").val(week).text(week));
+                var opText =  week + " @ " + shortString(getDateOfISOWeek(week, year));
+                $("#week_number").append($("<option />").val(week).text(opText));
             }
         }
 
@@ -229,7 +230,7 @@
             }
 
             // apply alter style
-            $("#submit_result").addClass(style).text(message).show().delay(2000).fadeOut(
+            $("#submit_result").addClass(style).text(message).show().delay(1000).fadeOut(
                 "fast", 
                 function()
                 {
@@ -272,9 +273,9 @@
         <h1 class="text-right"> Hello, {{ user_name }}</h1>
         <input type="hidden" id="user_id" value="{{user_id}}">
 
-
         <div class="input-group mb-3">
             <div class="input-group-prepend">
+                <label class="input-group-text" for="week_number">Week</label>
                 <select class="custom-select" id="week_number">
                 </select>
             </div>
