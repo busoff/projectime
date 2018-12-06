@@ -94,7 +94,7 @@
                 });
         }
 
-        function postEntries(entries, handler) {
+        function postEntries(entries, success, fail) {
             console.log("POST submit_entries ... params: " + JSON.stringify(entries))
             $.ajax({
                 type: 'post',
@@ -102,8 +102,8 @@
                 data: JSON.stringify(entries),
                 contentType: "application/json; charset=utf-8",
                 traditional: true,
-                success: handler
-            });
+                success: success
+            }).fail(fail);
         }
 
         function extractTableData() {
@@ -197,16 +197,45 @@
 
         function initSubmitButton() {
             $("#submit").click(function () {
-                // add warning class to indicate submit is ongoing
-                $("#report_table tbody tr").addClass("table-warning")
                 var entries = getEntriesFromTable();
-                postEntries(entries, function () {
-                    // add warning class to indicate submit successes
-                    $("#report_table tbody tr").removeClass("table-warning")
-                    // simulate user selects week number to refetch data from server
-                    $("#week_number").change();
-                });
+                postEntries(entries, 
+                /*success*/ function () {
+                                indicateSubmitStatus(true)
+                                // simulate user selects week number to refetch data from server
+                                $("#week_number").change();
+                            },
+                   /*fail*/ function()
+                            {
+                                indicateSubmitStatus(false);
+                            });
             });
+        }
+
+        function indicateSubmitStatus(success)
+        {
+            console.log("indicate submit status:" + success);
+            var style = "";
+            var message = ""
+            if (success)
+            {
+                style = "alert-success";
+                message = "submit succeed";
+               
+            }
+            else
+            {
+                style = "alert-danger";
+                message = "submit failed";
+            }
+
+            // apply alter style
+            $("#submit_result").addClass(style).text(message).show().delay(2000).fadeOut(
+                "fast", 
+                function()
+                {
+                    // remove alter style after hidden
+                    $("#submit_result").removeClass(style).text("");
+                });
         }
 
         function getProjectList() {
@@ -268,6 +297,9 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <div id="submit_result" class="alert" role="alert">
+        </div>
     </div>
 
     <!-- Optional JavaScript -->
