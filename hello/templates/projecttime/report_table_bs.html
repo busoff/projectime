@@ -237,6 +237,8 @@
             initWeekNumberSelect();
             initSubmitButton();
             initMoreEntry();
+            var select = $("<select/>").addClass("custom-select").attr("data-live-search", "true");
+            $('body').append(select);
         });
     </script>
 
@@ -244,34 +246,36 @@
 </head>
 
 <body>
-    <h1> Hello, {{ user_name }}</h1>
-    <input type="hidden" id="user_id" value="{{user_id}}">
+    <div class="container">
+        <h1> Hello, {{ user_name }}</h1>
+        <input type="hidden" id="user_id" value="{{user_id}}">
 
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <select class="custom-select" id="week_number">
-            </select>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <select class="custom-select" id="week_number">
+                </select>
+            </div>
+            <button type="button" class="btn btn-dark" id="more_entry">More Item</button>
+            <button type="button" class="btn btn-primary" id="submit">Submit</button>
         </div>
-        <button type="button" class="btn btn-dark" id="more_entry">More Item</button>
-        <button type="button" class="btn btn-primary" id="submit">Submit</button>
-    </div>
 
-    <table class="table table-striped table-sm" id="report_table">
-        <thead>
-            <tr>
-                <th scope="col"> Project </th>
-                <th scope="col"> Mon. <small class="thead-date"></small> </th>
-                <th scope="col"> Tue. <small class="thead-date"></small> </th>
-                <th scope="col"> Wed. <small class="thead-date"></small> </th>
-                <th scope="col"> Thu. <small class="thead-date"></small> </th>
-                <th scope="col"> Fri. <small class="thead-date"></small> </th>
-                <th scope="col"> Sat. <small class="thead-date"></small> </th>
-                <th scope="col"> Sun. <small class="thead-date"></small> </th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <table class="table table-striped table-sm" id="report_table">
+            <thead>
+                <tr>
+                    <th scope="col"> Project </th>
+                    <th scope="col"> Mon. <small class="thead-date"></small> </th>
+                    <th scope="col"> Tue. <small class="thead-date"></small> </th>
+                    <th scope="col"> Wed. <small class="thead-date"></small> </th>
+                    <th scope="col"> Thu. <small class="thead-date"></small> </th>
+                    <th scope="col"> Fri. <small class="thead-date"></small> </th>
+                    <th scope="col"> Sat. <small class="thead-date"></small> </th>
+                    <th scope="col"> Sun. <small class="thead-date"></small> </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
