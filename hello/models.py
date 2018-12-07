@@ -1,17 +1,13 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 class Project(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=64)
-
-    def __str__(self):
-        return self.name
-
-class User(models.Model):
-    user_id = models.CharField(primary_key=True, max_length=16)
-    name = models.CharField("User name", max_length=64)
 
     def __str__(self):
         return self.name
@@ -25,5 +21,20 @@ class ProjectTimeEntry(models.Model):
     def __str__(self):
         return '{}@{} on {}: {}'.format(self.user, self.project, self.date, self.hour)
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    myid = models.CharField(max_length=16)
 
+    def __str__(self):
+        return "{} ({})".format(self.user.username, self.myid)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 

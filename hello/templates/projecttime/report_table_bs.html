@@ -271,6 +271,8 @@
 <body>
     <div class="container">
         <h1 class="text-right"> Hello, {{ user_name }}</h1>
+        <p><a href="{% url 'logout' %}">logout</a></p>
+        
         <input type="hidden" id="user_id" value="{{user_id}}">
 
         <div class="input-group mb-3">

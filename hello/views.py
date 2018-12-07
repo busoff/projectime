@@ -1,26 +1,31 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.template import loader
-from .models import User, ProjectTimeEntry, Project
+from .models import Profile, ProjectTimeEntry, Project
+from django.contrib.auth.models import User
 import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 import logging
+from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger(__name__)
 
+@login_required
 def index(request):
-    context = {
-        'user_list': User.objects.all()
-    }
-    return render(request, 'projecttime/index.html', context)
+    # context = {
+    #     'user_list': User.objects.all()
+    # }
+    # return render(request, 'projecttime/index.html', context)
+    return redirect("/projecttime/%s"%(request.user.profile.myid))
 
+@login_required
 def projecttime(request, user_id):
-    user = User.objects.get(user_id=user_id)
+    user = User.objects.get(profile__myid=user_id)
 
     # booststrap style
-    return render(request, 'projecttime/report_table_bs.html', {'user_name':user.name, 'user_id':user.user_id})
+    return render(request, 'projecttime/report_table_bs.html', {'user_name':user.username, 'user_id':user.profile.myid})
 
 def get_projects(request):
     projects = [project.name for project in Project.objects.all()]
@@ -29,11 +34,11 @@ def get_projects(request):
     return HttpResponse(data)
 
 def get_entries(request):
-    records = ProjectTimeEntry.objects.filter(user__user_id=request.GET['user'],
+    records = ProjectTimeEntry.objects.filter(user__profile__myid=request.GET['user'],
                                               date__gte=request.GET['from'],
                                               date__lte=request.GET['to'])
 
-    entries = [{'user': r.user.name,
+    entries = [{'user': r.user.username,
                 'project': r.project.name,
                 'date': r.date.isoformat(),
                 'hour': r.hour} for r in records]
@@ -59,7 +64,7 @@ def submit_entries(request):
         print(entry)
         e = ProjectTimeEntry()
         e.project = Project.objects.get(name=entry['project'])
-        e.user = User.objects.get(user_id=entry['user'])
+        e.user = User.objects.get(profile__myid=entry['user'])
         e.date =  datetime.datetime.strptime(entry['date'], "%Y-%m-%d").date()
 
         hour = 0
@@ -73,7 +78,6 @@ def submit_entries(request):
             e.save()
 
     return HttpResponse("OK")
-
 
 
 #################
