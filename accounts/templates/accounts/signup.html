@@ -37,7 +37,7 @@
         } else
           $("#alert").text("Password not matching");
       });
-      
+
       function checkUserExists(userName) {
         $.get("/accounts/user_exists", { "username": userName },
           function (response, status) {
@@ -48,28 +48,24 @@
           });
       }
 
-      $('#username').on('change', function (e) {
-        var username = $("#username").val();
-        checkUserExists(username);
+      $('#username').focusout(function (e) {
+        checkUserExists($(this).val());
       });
 
-      function checkUserIDExists(userID){
-        $.get("/accounts/userid_exists", {"userid": userID},
-        function(data, status)
-        {
-          var exists = JSON.parse(data)
-          if (exists)
-          {
-            $("#alert").text("user ID exists");
-          }
-        });
+      function checkUserIDExists(userID) {
+        $.get("/accounts/userid_exists", { "userid": userID },
+          function (data, status) {
+            var exists = JSON.parse(data)
+            if (exists) {
+              $("#alert").text("user ID exists");
+            }
+          });
       }
 
-      $("#userid").on("change", function(e)
-      {
-        checkUserIDExists($("#userid").val());
+      $("#userid").focusout(function (e) {
+        checkUserIDExists($(this).val());
       });
-      
+
     });
 
   </script>
