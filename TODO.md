@@ -8,7 +8,7 @@
 - [ ] remove submit button???
 - [x] fix bug that sometimes the project doesn't show in report table when refresh the page (commit b838a83475390f23260fdacc69bd4975d11bc525)
 - [x] indicate submit success (commit 00a3ad0f1bffc063310a93e235d47b0fb681129f)
-- [ ] show date in heading of report table
-- [ ] support user login
+- [x] show date in heading of report table
+- [x] support user login
 - [ ] how to check each user should have a corresponding profile
 - [ ] error handling in case of parameters in request doesn't exist
