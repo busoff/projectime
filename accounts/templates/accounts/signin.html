@@ -47,9 +47,9 @@
     </form>
     <a href="{% url 'accounts:signup' %}">Register</a>
     {% if signin_error %}
-    <div class="alert alert-danger" role="alert">
+    <p class="text-danger">
       Your username and password didn't match. Please try again.
-    </div>
+    </p>
     {% endif %}
   </div>
 </body>
