@@ -14,14 +14,16 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def index(request):
-    # context = {
-    #     'user_list': User.objects.all()
-    # }
-    # return render(request, 'projecttime/index.html', context)
+    print("index {}".format(request.user.profile))
+
+    if request.user.profile is None:
+        raise Http404("invalid user login")
+
     return redirect("/projecttime/%s"%(request.user.profile.myid))
 
 @login_required
 def projecttime(request, user_id):
+    print("projecttime")
     user = User.objects.get(profile__myid=user_id)
 
     # booststrap style

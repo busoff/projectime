@@ -35,18 +35,15 @@
   <div class="login-form">
     <form method="POST">
       {% csrf_token %}
-      <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-      <!-- <label for="userName" class="sr-only">Email address</label> -->
-      <input type="text" id="userName" class="form-control" placeholder="Name" name="username" required autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+      <input type="text" class="form-control" placeholder="Name" name="username" required autofocus>
+      <input type="text" class="form-control" placeholder="ID" name="userid" required autofocus>
+      <input type="password" class="form-control" placeholder="Password" name="password" required>
+      <input type="password" class="form-control" placeholder="Confirm Password" name="confirmed-password" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     </form>
+
+    <a href="{% url 'accounts:login' %}">Login</a>
   </div>
 </body>
 

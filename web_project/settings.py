@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hello.apps.HelloConfig'
+    'hello.apps.HelloConfig',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
@@ -120,5 +121,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_URL="/accounts/login"
 LOGIN_REDIRECT_URL = '/projecttime'
-LOGOUT_REDIRECT_URL = '/projecttime'
