@@ -21,10 +21,3 @@ class ProjectTimeEntry(models.Model):
 
     def __str__(self):
         return '{}@{} on {}: {}'.format(self.user, self.project, self.date, self.hour)
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    myid = models.CharField(max_length=16, unique=True)
-
-    def __str__(self):
-        return "{} ({})".format(self.user.username, self.myid)

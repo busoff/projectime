@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import Http404
 from django.contrib.auth.models import User
-from hello.models import Profile
+from accounts.models import Profile
 from django.http import HttpResponse
 import json
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.template import loader
-from .models import Profile, ProjectTimeEntry, Project
+from .models import ProjectTimeEntry, Project
 from django.contrib.auth.models import User
 import datetime
 from django.views.decorators.csrf import csrf_exempt
