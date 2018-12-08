@@ -29,6 +29,50 @@
     }
   </style>
 
+  <script>
+    $(document).ready(function () {
+      $('#password, #confirm_password').on('keyup', function () {
+        if ($('#password').val() == $('#confirm_password').val()) {
+          $("#alert").text("");
+        } else
+          $("#alert").text("Password not matching");
+      });
+      
+      function checkUserExists(userName) {
+        $.get("/accounts/user_exists", { "username": userName },
+          function (response, status) {
+            var userExists = JSON.parse(response);
+            if (userExists) {
+              $("#alert").text("user exists");
+            }
+          });
+      }
+
+      $('#username').on('change', function (e) {
+        var username = $("#username").val();
+        checkUserExists(username);
+      });
+
+      function checkUserIDExists(userID){
+        $.get("/accounts/userid_exists", {"userid": userID},
+        function(data, status)
+        {
+          var exists = JSON.parse(data)
+          if (exists)
+          {
+            $("#alert").text("user ID exists");
+          }
+        });
+      }
+
+      $("#userid").on("change", function(e)
+      {
+        checkUserIDExists($("#userid").val());
+      });
+      
+    });
+
+  </script>
 </head>
 
 <body class="text-center">
@@ -36,11 +80,12 @@
     <form method="POST">
       {% csrf_token %}
       <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-      <input type="text" class="form-control" placeholder="Name" name="username" required autofocus>
-      <input type="text" class="form-control" placeholder="ID" name="userid" required autofocus>
-      <input type="password" class="form-control" placeholder="Password" name="password" required>
-      <input type="password" class="form-control" placeholder="Confirm Password" name="confirmed-password" required>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+      <p class="text-danger" id="alert"> </p>
+      <input type="text" class="form-control" id="username" placeholder="Name" name="username" required autofocus>
+      <input type="text" class="form-control" id="userid" placeholder="ID" name="userid" required autofocus>
+      <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+      <input type="password" class="form-control" id="confirm_password" placeholder="Confirm Password" required>
+      <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Register</button>
     </form>
 
     <a href="{% url 'accounts:login' %}">Login</a>

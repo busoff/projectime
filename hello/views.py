@@ -23,7 +23,6 @@ def index(request):
 
 @login_required
 def projecttime(request, user_id):
-    print("projecttime")
     user = User.objects.get(profile__myid=user_id)
 
     # booststrap style
@@ -32,7 +31,7 @@ def projecttime(request, user_id):
 def get_projects(request):
     projects = [project.name for project in Project.objects.all()]
     data = json.dumps(projects)
-    print(data)
+    print(data) 
     return HttpResponse(data)
 
 def get_entries(request):
