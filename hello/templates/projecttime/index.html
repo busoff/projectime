@@ -1,9 +1,0 @@
-{% if user_list %}
-    <ul>
-        {% for u in user_list %}
-            <li><a href="{% url 'projecttime:user' u.profile.myid %}">{{u.username}}</a> </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p> no user added </p>
-{% endif %}
