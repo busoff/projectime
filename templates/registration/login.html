@@ -1,13 +1,53 @@
-<!-- templates/registration/login.html -->
-{% extends 'base.html' %}
+<!doctype html>
+<html lang="en">
 
-{% block title %}Login{% endblock %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-{% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
-{% endblock %}
+  <title>Signin Template for Bootstrap</title>
+
+  {% load static %}
+  <script src="{% static 'jquery/jquery-3.3.1.js' %}"></script>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'bootstrap/4.1.3/css/bootstrap.min.css' %}">
+
+  <style type="text/css">
+    .login-form {
+      width: 340px;
+      margin: 50px auto;
+    }
+
+    .login-form form {
+      margin-bottom: 15px;
+      background: #f7f7f7;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+    }
+  </style>
+
+</head>
+
+<body class="text-center">
+  <div class="login-form">
+    <form method="POST">
+      {% csrf_token %}
+      <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+      <!-- <label for="userName" class="sr-only">Email address</label> -->
+      <input type="text" id="userName" class="form-control" placeholder="Name" name="username" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+  </div>
+</body>
+
+</html>
