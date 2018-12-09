@@ -79,4 +79,4 @@ def submit_entries(request):
 # Test function #
 #################
 def test(request):
-    return render(request, 'projecttime/bootstrap.html', {})
+    return render(request, 'projecttime/test.html', {})
