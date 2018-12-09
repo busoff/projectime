@@ -70,9 +70,9 @@
 
       $("#userid").focusout(function () {
         var input = $(this);
-        checkUserIDExists($(this).val(), function (exists) {
+        checkUserIDExists($(this).val(), function (isExists) {
           var isValid = !isExists;
-          setValidity(isValid);
+          setValidity(input, isValid);
         });
       });
 
@@ -98,7 +98,7 @@
       <form-group>
         <label class="text-left" for="userid">User ID</label>
         <input type="text" class="form-control" id="userid" placeholder="ID" name="userid" required autofocus>
-        <div class="invalid-tooltip">
+        <div class="invalid-feedback">
           User ID exists
         </div>
       </form-group>
