@@ -12,3 +12,5 @@
 - [x] support user login
 - [ ] how to check each user should have a corresponding profile
 - [ ] error handling in case of parameters in request doesn't exist
+- [x] prevent submission if not all fields in a form are valid(834241457381fa579e18c43c551d6f701866dde9).
+- [ ] add validation for password field in form
