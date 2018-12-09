@@ -14,22 +14,13 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def index(request):
-    print("index {}".format(request.user.profile))
-
     if request.user.profile is None:
         raise Http404("invalid user login")
 
-    return redirect("/projecttime/%s"%(request.user.profile.myid))
-
-@login_required
-def projecttime(request, user_id):
-    user = User.objects.get(profile__myid=user_id)
-
-    if user.profile is None:
-        raise Http404("user has no profile")
-
     # booststrap style
-    return render(request, 'projecttime/report_table_bs.html', {'user_name':user.username, 'user_id':user.profile.myid})
+    return render(request, 'projecttime/report_table_bs.html',
+                  {'user_name': request.user.username,
+                   'user_id': request.user.profile.myid})
 
 def get_projects(request):
     projects = [project.name for project in Project.objects.all()]
