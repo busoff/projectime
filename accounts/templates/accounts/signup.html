@@ -52,15 +52,11 @@
         }
       }
 
-      $('#username').focusout(function (e) {
+      $('#username').focusout(function () {
         var input = $(this);
         checkUserExists(input.val(), function (isExists) {
-          if (isExists) {
-            setValidity(input, false);
-          }
-          else {
-            setValidity(input, true);
-          }
+          var isValid = !isExists;
+          setValidity(input, isValid);
         });
       });
 
@@ -72,15 +68,11 @@
           });
       }
 
-      $("#userid").focusout(function (e) {
+      $("#userid").focusout(function () {
         var input = $(this);
         checkUserIDExists($(this).val(), function (exists) {
-          if (exists) {
-            setValidity(input, false);
-          }
-          else {
-            setValidity(input, true);
-          }
+          var isValid = !isExists;
+          setValidity(isValid);
         });
       });
 
