@@ -4,5 +4,11 @@
         "myid",
         "signin",
         "signup"
-    ]
+    ],
+    "files.exclude": {
+        ".vscode": true,
+        "**/__pycache__": true,
+        "**/env": true,
+        "**/migrations": true
+    }
 }
