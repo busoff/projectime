@@ -31,39 +31,57 @@
 
   <script>
     $(document).ready(function () {
-      $('#password, #confirm_password').on('keyup', function () {
-        if ($('#password').val() == $('#confirm_password').val()) {
-          $("#alert").text("");
-        } else
-          $("#alert").text("Password not matching");
-      });
-
-      function checkUserExists(userName) {
+      function checkUserExists(userName, handler) {
         $.get("/accounts/user_exists", { "username": userName },
           function (response, status) {
             var userExists = JSON.parse(response);
-            if (userExists) {
-              $("#alert").text("user exists");
-            }
+            handler(userExists);
           });
       }
 
+      // set validity for form field to show Bootstrap feedback message
+      function setValidity(element, validity)
+      {
+        if (validity) {
+          element.removeClass("is-invalid");
+          element.addClass("is-valid");
+        }
+        else {
+          element.removeClass("is-valid");
+          element.addClass("is-invalid");
+        }
+      }
+
       $('#username').focusout(function (e) {
-        checkUserExists($(this).val());
+        var input = $(this);
+        checkUserExists(input.val(), function (isExists) {
+          if (isExists) {
+            setValidity(input, false);
+          }
+          else {
+            setValidity(input, true);
+          }
+        });
       });
 
-      function checkUserIDExists(userID) {
+      function checkUserIDExists(userID, handler) {
         $.get("/accounts/userid_exists", { "userid": userID },
           function (data, status) {
             var exists = JSON.parse(data)
-            if (exists) {
-              $("#alert").text("user ID exists");
-            }
+            handler(exists);
           });
       }
 
       $("#userid").focusout(function (e) {
-        checkUserIDExists($(this).val());
+        var input = $(this);
+        checkUserIDExists($(this).val(), function (exists) {
+          if (exists) {
+            setValidity(input, false);
+          }
+          else {
+            setValidity(input, true);
+          }
+        });
       });
 
     });
@@ -71,20 +89,41 @@
   </script>
 </head>
 
-<body class="text-center">
+<body>
   <div class="login-form">
     <form method="POST">
       {% csrf_token %}
-      <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-      <p class="text-danger" id="alert"> </p>
-      <input type="text" class="form-control" id="username" placeholder="Name" name="username" required autofocus>
-      <input type="text" class="form-control" id="userid" placeholder="ID" name="userid" required autofocus>
-      <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
-      <input type="password" class="form-control" id="confirm_password" placeholder="Confirm Password" required>
+      <h1 class="h2 mb-3 text-center">Register</h1>
+
+      <form-group>
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" placeholder="Name" name="username" required autofocus>
+        <div class="invalid-feedback">
+          Username exists
+        </div>
+      </form-group>
+
+      <form-group>
+        <label class="text-left" for="userid">User ID</label>
+        <input type="text" class="form-control" id="userid" placeholder="ID" name="userid" required autofocus>
+        <div class="invalid-tooltip">
+          User ID exists
+        </div>
+      </form-group>
+
+      <form-group>
+        <label class="" for="password"> Password </label>
+        <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+        <small id="passwordHelpBlock" class="form-text text-muted">
+          Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special
+          characters, or emoji.
+        </small>
+      </form-group>
+
       <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Register</button>
     </form>
 
-    <a href="{% url 'accounts:login' %}">Login</a>
+    <a class="text-center" href="{% url 'accounts:login' %}">Login</a>
   </div>
 </body>
 
