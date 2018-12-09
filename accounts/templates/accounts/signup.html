@@ -30,6 +30,23 @@
   </style>
 
   <script>
+    /**
+     * set field validity for custom validation. It extracts
+     * the error text from the sibling of the given element to
+     * show to user
+     * @param  element      html element to be set
+     * @param  validity     validity to be set
+     */
+    function setValidity(element, validity) {
+      if (validity) {
+        element[0].setCustomValidity("");
+      }
+      else {
+        var errMsg = element.siblings(".invalid-feedback").text()
+        element[0].setCustomValidity(errMsg);
+      }
+    }
+
     $(document).ready(function () {
       function checkUserExists(userName, handler) {
         $.get("/accounts/user_exists", { "username": userName },
@@ -37,18 +54,6 @@
             var userExists = JSON.parse(response);
             handler(userExists);
           });
-      }
-
-      // set validity for form field to show Bootstrap feedback message
-      function setValidity(element, validity) {
-        if (validity) {
-          element.removeClass("is-invalid");
-          element.addClass("is-valid");
-        }
-        else {
-          element.removeClass("is-valid");
-          element.addClass("is-invalid");
-        }
       }
 
       $('#username').focusout(function () {
