@@ -45,6 +45,8 @@
         var errMsg = element.siblings(".invalid-feedback").text()
         element[0].setCustomValidity(errMsg);
       }
+
+      // element[0].reportValidity();
     }
 
     $(document).ready(function () {
@@ -95,7 +97,7 @@
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" placeholder="Name" name="username" required autofocus>
         <div class="invalid-feedback">
-          Username exists
+          Please use different name, as it's already taken.
         </div>
       </form-group>
 
@@ -103,7 +105,7 @@
         <label class="text-left" for="userid">User ID</label>
         <input type="text" class="form-control" id="userid" placeholder="ID" name="userid" required autofocus>
         <div class="invalid-feedback">
-          User ID exists
+          Please use different ID, as it's already taken.
         </div>
       </form-group>
 
@@ -118,7 +120,6 @@
 
       <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Register</button>
     </form>
-
     <a class="text-center" href="{% url 'accounts:login' %}">Login</a>
   </div>
 </body>
