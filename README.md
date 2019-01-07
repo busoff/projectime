@@ -2,28 +2,61 @@
 a django project
 
 
-# Weekly Report API
+## Weekly Report API
 
+### Get Projects
 
-### Get projects
+#### URL
+    HTTP GET /projects
 
-### Get records 
+#### Response
+##### Success
+ - `Code`: 200
+ - `Content`:
+```json
+// JSON
+[
+// project 1
+{
+    project_id:[string]      // project id
+    project_name: [string]   // project name
+}
 
-### URL
-**HTTP GET /records**
+// project 2
+{
+    project_id:[string]      // project id
+    project_name: [string]   // project name
+}
+
+// project 3
+...
+]
+```
+----
+
+### Get Records 
+
+#### URL
+    HTTP GET /records
 
 #### URL Params
-- `from` = [date] 
-- `to` = [date]
-- `userid` = [string]
+- `from` [date]  
+    the date when record start from
+- `to` [date]  
+    the date when record ends to
+- `userid` [string]  
+    the user of the query record
 
-## Add records
-### URL
-    HTTP POST /records
-### Data Params
-JSON
+#### Response
+
+##### Success
+- `Code`: 200  
+- `Content`:  
 ```json
+// JSON
 [
+
+// record 1
 {
 user:[string]    // user id
 project:[string] // project id
@@ -31,6 +64,7 @@ date:[string]    // ISO format date
 hour:[int]       // hour
 },
 
+// record 2
 {
 user:[string]    // user id
 project:[string] // project id
@@ -38,6 +72,44 @@ date:[string]    // ISO format date
 hour:[int]       // hour
 }
 
+// record 3
 ...
 ]
 ```
+----
+
+### Add Records
+#### URL
+    HTTP POST /records
+
+#### Data Params
+```json
+// JSON
+[
+
+// record 1
+{
+user:[string]    // user id
+project:[string] // project id
+date:[string]    // ISO format date
+hour:[int]       // hour
+},
+
+// record 2
+{
+user:[string]    // user id
+project:[string] // project id
+date:[string]    // ISO format date
+hour:[int]       // hour
+}
+
+// record 3
+...
+]
+```
+
+#### Response
+##### Success
+- `Code`: 200  
+
+----
