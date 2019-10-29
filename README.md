@@ -1,6 +1,6 @@
 # projectime
 
-Manage project time basd on Django
+Keep track of task time basd on Django
 
 
 ## Weekly Report API
