@@ -65,7 +65,7 @@ def signin(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("/projecttime/%s"%(user.profile.myid))
+            return redirect('/projecttime/')
         else:
             print("invalid signin")
             return render(request, 'accounts/signin.html', {"signin_error":True})
